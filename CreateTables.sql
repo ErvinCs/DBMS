@@ -52,8 +52,9 @@ CREATE TABLE doctors (
 	--	REFERENCES Lab01.dbo.addresses (addr_id)
 	--	ON DELETE CASCADE
 	--	ON UPDATE CASCADE
-	doctor_addr INT REFERENCES addresses(addr_id) NOT NULL
-	CONSTRAINT doctor_addr UNIQUE (doctor_addr)
+	doctor_addr INT REFERENCES addresses(addr_id)
+	--CONSTRAINT doctor_addr UNIQUE (doctor_addr)
+	--!Removed the constraint so i can use the client app!
 );
 
 CREATE TABLE patients (

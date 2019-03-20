@@ -16,9 +16,9 @@ namespace DBMS_Lab01
         private static String connectionString = @"Data Source=DESKTOP-AFL01LP;Initial Catalog=Lab01;Integrated Security=True";
         SqlConnection connection = new SqlConnection(connectionString);
         //TODO - Binding Source, DataSet and this (right below) adapter
-        SqlDataAdapter adapter;
-        BindingSource bs = new BindingSource();
-        DataSet ds = new DataSet();
+        //SqlDataAdapter adapter;
+        //BindingSource bs = new BindingSource();
+        //DataSet ds = new DataSet();
 
         public Form1()
         {
@@ -50,14 +50,18 @@ namespace DBMS_Lab01
             cmd.CommandText = "SELECT * FROM Requests WHERE requests_doctor = @request_id";
             cmd.Parameters.AddWithValue("@request_id", id);
 
-            DataSet dts = new DataSet();
-            SqlDataAdapter ad = new SqlDataAdapter(cmd);
-            ad.Fill(dts, "Requests");
-            viewRequests.DataSource = dts.Tables["Requests"];
+            DataSet ds = new DataSet();
+            SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+            adapter.Fill(ds, "Requests");
+            viewRequests.DataSource = ds.Tables["Requests"];
         }
 
         private void updateViewDoctors()
         {
+            SqlDataAdapter adapter;
+            BindingSource bs = new BindingSource();
+            DataSet ds = new DataSet();
+
             adapter = new SqlDataAdapter("SELECT * FROM Doctors", connection);
             adapter.Fill(ds, "Doctors");
             bs.DataSource = ds.Tables["Doctors"];
@@ -78,18 +82,7 @@ namespace DBMS_Lab01
 
         private void btnAddDoctor_Click(object sender, EventArgs e)
         {
-            int doctorId;
-            int.TryParse(this.viewDoctors.CurrentRow.Cells[0].Value.ToString(), out doctorId);
-
             String name = tbName.Text;
-
-            DateTime date;
-            date = dateTimePicker.Value.Date;
-            String birthDate = date.Day.ToString() + "/" + date.Month.ToString() + "/" + date.Year.ToString();
-
-            //DateTime birthDate;
-            //DateTime.TryParse(this.tbBirthDate.Text, out birthDate);
-            //birthDate = birthDate.Date;
 
             long CNP;
             long.TryParse(this.tbCNP.Text, out CNP);
@@ -99,14 +92,13 @@ namespace DBMS_Lab01
                 SqlCommand cmd = new SqlCommand();
                 cmd.Connection = connection;
                 cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "INSERT into Doctors VALUES (@doctor_id, @name, @birth_date, @CNP)";
-                cmd.Parameters.AddWithValue("@doctor_id", doctorId);
+                cmd.CommandText = "INSERT into Doctors ([name],[birth_date],[CNP]) VALUES (@name, @birth_date, @CNP)";
                 cmd.Parameters.AddWithValue("@name", name);
-                cmd.Parameters.AddWithValue("@birth_date", birthDate);
+                cmd.Parameters.AddWithValue("@birth_date", dateTimePicker.Value.Date);
                 cmd.Parameters.AddWithValue("@CNP", CNP);
                 cmd.ExecuteNonQuery();
 
-                updateViewRequests(doctorId);
+                updateViewDoctors();
             }
             catch (SqlException err)
             {
@@ -138,10 +130,10 @@ namespace DBMS_Lab01
                 SqlCommand cmd = new SqlCommand();
                 cmd.Connection = connection;
                 cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "INSERT into Requests VALUES (@quantity, @rh, @blood_group, @requests_doctor)";
-                cmd.Parameters.AddWithValue("@quantity", quantity);
-                cmd.Parameters.AddWithValue("@rh", rh);
+                cmd.CommandText = "INSERT into Requests ([blood_group],[rh],[quantity],[requests_doctor]) VALUES (@blood_group, @rh, @quantity, @requests_doctor)";
                 cmd.Parameters.AddWithValue("@blood_group", bloodGroup);
+                cmd.Parameters.AddWithValue("@rh", rh);
+                cmd.Parameters.AddWithValue("@quantity", quantity);
                 cmd.Parameters.AddWithValue("@requests_doctor", doctorId);
                 cmd.ExecuteNonQuery();
 
@@ -194,6 +186,7 @@ namespace DBMS_Lab01
             tbDoctorID.Clear();
         }
 
+        //TODO - Check fields if empty
         private void btnUpdateRequest_Click(object sender, EventArgs e)
         {
             int requestId;
