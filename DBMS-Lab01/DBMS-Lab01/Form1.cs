@@ -38,6 +38,7 @@ namespace DBMS_Lab01
                 MessageBox.Show("Error: " + err.Message.ToString());
             }
             updateViewDoctors();
+            initComboBoxes();
         }
 
         private void updateViewRequests(int id)
@@ -70,6 +71,52 @@ namespace DBMS_Lab01
             int id;
             int.TryParse(viewDoctors.CurrentRow.Cells[0].Value.ToString(), out id);
             updateViewRequests(id);
+        }
+
+        private void initComboBoxes()
+        {
+            var rhs = new string[2];
+            rhs[0] = "rh+";
+            rhs[1] = "rh-";
+
+            DataSet rhSet = new DataSet();
+            DataTable rhTable = new DataTable("rhs");
+            DataColumn rhColumn = new DataColumn("rh", typeof(string));
+            rhTable.Columns.Add(rhColumn);
+
+            for (int i = 0; i < rhs.Length; i++)
+            {
+                DataRow row = rhTable.NewRow();
+                row["rh"] = rhs[i];
+                rhTable.Rows.Add(row);
+            }
+            rhSet.Tables.Add(rhTable);
+            cbRH.DataSource = rhSet.Tables["rhs"].DefaultView;
+            cbRH.DisplayMember = "rh";
+            cbRH.BindingContext = this.BindingContext;
+
+            var blood_groups = new string[4];
+            blood_groups[0] = "O1";
+            blood_groups[1] = "A2";
+            blood_groups[2] = "B3";
+            blood_groups[3] = "AB4";
+
+            DataSet groupSet = new DataSet();
+            DataTable groupTable = new DataTable("blood_groups");
+            DataColumn groupColumn = new DataColumn("blood_group", typeof(string));           
+            groupTable.Columns.Add(groupColumn);
+    
+            for(int i = 0; i < blood_groups.Length; i++)
+            {
+                DataRow row = groupTable.NewRow();
+                row["blood_group"] = blood_groups[i];
+                groupTable.Rows.Add(row);
+            }
+
+            groupSet.Tables.Add(groupTable);
+            cbGroup.DataSource = groupSet.Tables["blood_groups"].DefaultView;
+            cbGroup.DisplayMember = "blood_group";
+            cbGroup.BindingContext = this.BindingContext;
         }
 
         private void viewDoctors_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -109,7 +156,6 @@ namespace DBMS_Lab01
             }
 
             tbName.Clear();
-            tbBirthDate.Clear();
             tbCNP.Clear();
         }
 
@@ -118,12 +164,12 @@ namespace DBMS_Lab01
             int quantity;
             int.TryParse(tbQuantity.Text, out quantity);
 
-            String rh = tbRH.Text;
+            String rh = cbRH.Text.ToString();
 
-            String bloodGroup = tbBloodGroup.Text;
+            String bloodGroup = cbGroup.Text.ToString();
 
             int doctorId;
-            int.TryParse(tbDoctorID.Text, out doctorId);
+            int.TryParse(viewDoctors.CurrentRow.Cells[0].Value.ToString(), out doctorId);
 
             try
             {
@@ -148,9 +194,6 @@ namespace DBMS_Lab01
             }
 
             tbQuantity.Clear();
-            tbRH.Clear();
-            tbBloodGroup.Clear();
-            tbDoctorID.Clear();
         }
 
         private void btnDeleteRequest_Click(object sender, EventArgs e)
@@ -174,53 +217,56 @@ namespace DBMS_Lab01
             }
             catch (SqlException err)
             {
-                MessageBox.Show(err.ToString());
+                MessageBox.Show("SQLException: " + err.ToString());
             } catch (Exception err)
             {
-                MessageBox.Show("SQLError: " + err.ToString());
+                MessageBox.Show("Exception: " + err.ToString());
             }
 
             tbQuantity.Clear();
-            tbRH.Clear();
-            tbBloodGroup.Clear();
-            tbDoctorID.Clear();
         }
 
-        //TODO - Check fields if empty
         private void btnUpdateRequest_Click(object sender, EventArgs e)
         {
-            int requestId;
-            int.TryParse(viewRequests.CurrentRow.Cells[0].Value.ToString(), out requestId);
-
-            int quantity;
-            int.TryParse(tbQuantity.Text, out quantity);
-
-            String rh = tbRH.Text;
-
-            String bloodGroup = tbBloodGroup.Text;
-
-            int doctorId;
-            int.TryParse(tbDoctorID.Text, out doctorId);
-
-
             SqlCommand cmd = new SqlCommand();
             cmd.Connection = connection;
             cmd.CommandType = CommandType.Text;
-            cmd.CommandText = "UPDATE Requests SET requests_doctor = @requests_doctor, quantity = @quantity, rh = @rh, blood_group = @blood_group " +
-                                "WHERE request_id = @request_id";
+
+            int requestId;
+            int.TryParse(viewRequests.CurrentRow.Cells[0].Value.ToString(), out requestId);
+
+            int doctorId;
+            int.TryParse(viewDoctors.CurrentRow.Cells[0].Value.ToString(), out doctorId);
+
+            String rh = cbRH.Text.ToString();   //cbRH.SelectedItem.ToString();
+
+            String bloodGroup = cbGroup.Text.ToString();    // cbGroup.SelectedValue.ToString();
+
+            String cmdString = "UPDATE Requests SET rh = @rh, blood_group = @blood_group, requests_doctor = @requests_doctor";
+
+            //If quantity empty
+            int quantity;
+            if (!tbQuantity.Text.Equals(""))
+            {
+                cmdString += ", quantity = @quantity";
+                int.TryParse(tbQuantity.Text, out quantity);
+                cmd.Parameters.AddWithValue("@quantity", quantity);
+            }
+
+            cmdString += " WHERE request_id = @request_id";
+
+
+            cmd.CommandText = cmdString;
+            cmd.Parameters.AddWithValue("@requests_doctor", doctorId);
             cmd.Parameters.AddWithValue("@request_id", requestId);
-            cmd.Parameters.AddWithValue("@quantity", quantity);
             cmd.Parameters.AddWithValue("@rh", rh);
             cmd.Parameters.AddWithValue("@blood_group", bloodGroup);
-            cmd.Parameters.AddWithValue("@requests_doctor", doctorId);
+
             cmd.ExecuteNonQuery();
 
             updateViewRequests(doctorId);
 
             tbQuantity.Clear();
-            tbRH.Clear();
-            tbBloodGroup.Clear();
-            tbDoctorID.Clear();
         }
     }
 }
