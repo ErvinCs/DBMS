@@ -37,20 +37,17 @@
             this.labelQuantity = new System.Windows.Forms.Label();
             this.labelRH = new System.Windows.Forms.Label();
             this.labelGroup = new System.Windows.Forms.Label();
-            this.labelDoctorId = new System.Windows.Forms.Label();
             this.tbName = new System.Windows.Forms.TextBox();
-            this.tbBirthDate = new System.Windows.Forms.TextBox();
             this.tbCNP = new System.Windows.Forms.TextBox();
             this.tbQuantity = new System.Windows.Forms.TextBox();
-            this.tbBloodGroup = new System.Windows.Forms.TextBox();
-            this.tbRH = new System.Windows.Forms.TextBox();
-            this.tbDoctorID = new System.Windows.Forms.TextBox();
             this.btnAddRequest = new System.Windows.Forms.Button();
             this.btnDeleteRequest = new System.Windows.Forms.Button();
             this.btnUpdateRequest = new System.Windows.Forms.Button();
             this.viewDoctors = new System.Windows.Forms.DataGridView();
             this.viewRequests = new System.Windows.Forms.DataGridView();
             this.dateTimePicker = new System.Windows.Forms.DateTimePicker();
+            this.cbRH = new System.Windows.Forms.ComboBox();
+            this.cbGroup = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.viewDoctors)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewRequests)).BeginInit();
             this.SuspendLayout();
@@ -146,16 +143,6 @@
             this.labelGroup.TabIndex = 10;
             this.labelGroup.Text = "Blood group:";
             // 
-            // labelDoctorId
-            // 
-            this.labelDoctorId.AutoSize = true;
-            this.labelDoctorId.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelDoctorId.Location = new System.Drawing.Point(485, 443);
-            this.labelDoctorId.Name = "labelDoctorId";
-            this.labelDoctorId.Size = new System.Drawing.Size(82, 20);
-            this.labelDoctorId.TabIndex = 11;
-            this.labelDoctorId.Text = "Doctor ID:";
-            // 
             // tbName
             // 
             this.tbName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -163,14 +150,6 @@
             this.tbName.Name = "tbName";
             this.tbName.Size = new System.Drawing.Size(100, 26);
             this.tbName.TabIndex = 13;
-            // 
-            // tbBirthDate
-            // 
-            this.tbBirthDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbBirthDate.Location = new System.Drawing.Point(129, 401);
-            this.tbBirthDate.Name = "tbBirthDate";
-            this.tbBirthDate.Size = new System.Drawing.Size(100, 26);
-            this.tbBirthDate.TabIndex = 14;
             // 
             // tbCNP
             // 
@@ -188,34 +167,10 @@
             this.tbQuantity.Size = new System.Drawing.Size(100, 26);
             this.tbQuantity.TabIndex = 16;
             // 
-            // tbBloodGroup
-            // 
-            this.tbBloodGroup.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbBloodGroup.Location = new System.Drawing.Point(610, 405);
-            this.tbBloodGroup.Name = "tbBloodGroup";
-            this.tbBloodGroup.Size = new System.Drawing.Size(100, 26);
-            this.tbBloodGroup.TabIndex = 17;
-            // 
-            // tbRH
-            // 
-            this.tbRH.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbRH.Location = new System.Drawing.Point(610, 369);
-            this.tbRH.Name = "tbRH";
-            this.tbRH.Size = new System.Drawing.Size(100, 26);
-            this.tbRH.TabIndex = 18;
-            // 
-            // tbDoctorID
-            // 
-            this.tbDoctorID.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbDoctorID.Location = new System.Drawing.Point(610, 437);
-            this.tbDoctorID.Name = "tbDoctorID";
-            this.tbDoctorID.Size = new System.Drawing.Size(100, 26);
-            this.tbDoctorID.TabIndex = 19;
-            // 
             // btnAddRequest
             // 
             this.btnAddRequest.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAddRequest.Location = new System.Drawing.Point(771, 337);
+            this.btnAddRequest.Location = new System.Drawing.Point(771, 331);
             this.btnAddRequest.Name = "btnAddRequest";
             this.btnAddRequest.Size = new System.Drawing.Size(141, 29);
             this.btnAddRequest.TabIndex = 20;
@@ -226,7 +181,7 @@
             // btnDeleteRequest
             // 
             this.btnDeleteRequest.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDeleteRequest.Location = new System.Drawing.Point(771, 386);
+            this.btnDeleteRequest.Location = new System.Drawing.Point(771, 366);
             this.btnDeleteRequest.Name = "btnDeleteRequest";
             this.btnDeleteRequest.Size = new System.Drawing.Size(141, 29);
             this.btnDeleteRequest.TabIndex = 21;
@@ -237,7 +192,7 @@
             // btnUpdateRequest
             // 
             this.btnUpdateRequest.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnUpdateRequest.Location = new System.Drawing.Point(771, 434);
+            this.btnUpdateRequest.Location = new System.Drawing.Point(771, 401);
             this.btnUpdateRequest.Name = "btnUpdateRequest";
             this.btnUpdateRequest.Size = new System.Drawing.Size(141, 29);
             this.btnUpdateRequest.TabIndex = 22;
@@ -265,30 +220,55 @@
             // dateTimePicker
             // 
             this.dateTimePicker.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dateTimePicker.Location = new System.Drawing.Point(129, 433);
+            this.dateTimePicker.Location = new System.Drawing.Point(129, 409);
             this.dateTimePicker.Name = "dateTimePicker";
             this.dateTimePicker.Size = new System.Drawing.Size(311, 22);
             this.dateTimePicker.TabIndex = 25;
+            // 
+            // cbRH
+            // 
+            this.cbRH.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbRH.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbRH.FormattingEnabled = true;
+            this.cbRH.Items.AddRange(new object[] {
+            "O1",
+            "A2",
+            "B3",
+            "AB4"});
+            this.cbRH.Location = new System.Drawing.Point(610, 371);
+            this.cbRH.Name = "cbRH";
+            this.cbRH.Size = new System.Drawing.Size(121, 24);
+            this.cbRH.TabIndex = 26;
+            // 
+            // cbGroup
+            // 
+            this.cbGroup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbGroup.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbGroup.FormattingEnabled = true;
+            this.cbGroup.Items.AddRange(new object[] {
+            "rh-",
+            "rh+"});
+            this.cbGroup.Location = new System.Drawing.Point(610, 407);
+            this.cbGroup.Name = "cbGroup";
+            this.cbGroup.Size = new System.Drawing.Size(121, 24);
+            this.cbGroup.TabIndex = 27;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(924, 545);
+            this.Controls.Add(this.cbGroup);
+            this.Controls.Add(this.cbRH);
             this.Controls.Add(this.dateTimePicker);
             this.Controls.Add(this.viewRequests);
             this.Controls.Add(this.viewDoctors);
             this.Controls.Add(this.btnUpdateRequest);
             this.Controls.Add(this.btnDeleteRequest);
             this.Controls.Add(this.btnAddRequest);
-            this.Controls.Add(this.tbDoctorID);
-            this.Controls.Add(this.tbRH);
-            this.Controls.Add(this.tbBloodGroup);
             this.Controls.Add(this.tbQuantity);
             this.Controls.Add(this.tbCNP);
-            this.Controls.Add(this.tbBirthDate);
             this.Controls.Add(this.tbName);
-            this.Controls.Add(this.labelDoctorId);
             this.Controls.Add(this.labelGroup);
             this.Controls.Add(this.labelRH);
             this.Controls.Add(this.labelQuantity);
@@ -319,20 +299,17 @@
         private System.Windows.Forms.Label labelQuantity;
         private System.Windows.Forms.Label labelRH;
         private System.Windows.Forms.Label labelGroup;
-        private System.Windows.Forms.Label labelDoctorId;
         private System.Windows.Forms.TextBox tbName;
-        private System.Windows.Forms.TextBox tbBirthDate;
         private System.Windows.Forms.TextBox tbCNP;
         private System.Windows.Forms.TextBox tbQuantity;
-        private System.Windows.Forms.TextBox tbBloodGroup;
-        private System.Windows.Forms.TextBox tbRH;
-        private System.Windows.Forms.TextBox tbDoctorID;
         private System.Windows.Forms.Button btnAddRequest;
         private System.Windows.Forms.Button btnDeleteRequest;
         private System.Windows.Forms.Button btnUpdateRequest;
         private System.Windows.Forms.DataGridView viewDoctors;
         private System.Windows.Forms.DataGridView viewRequests;
         private System.Windows.Forms.DateTimePicker dateTimePicker;
+        private System.Windows.Forms.ComboBox cbRH;
+        private System.Windows.Forms.ComboBox cbGroup;
     }
 }
 
