@@ -74,7 +74,8 @@ CREATE TABLE patients (
 	--	ON DELETE CASCADE
 	--	ON UPDATE CASCADE
 	patient_addr INT REFERENCES addresses(addr_id) NOT NULL
-	CONSTRAINT patient_addr UNIQUE (patient_addr)
+	--CONSTRAINT patient_addr UNIQUE (patient_addr)
+	--!Removed the constraint so i can use the client app!
 );
 
 CREATE TABLE requests(

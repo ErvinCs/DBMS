@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Windows.Forms;
+using System.Configuration;
 
 namespace DBMS_Lab01
 {
@@ -15,10 +16,9 @@ namespace DBMS_Lab01
     {
         private static String connectionString = @"Data Source=DESKTOP-AFL01LP;Initial Catalog=Lab01;Integrated Security=True";
         SqlConnection connection = new SqlConnection(connectionString);
-        //TODO - Binding Source, DataSet and this (right below) adapter
-        //SqlDataAdapter adapter;
-        //BindingSource bs = new BindingSource();
-        //DataSet ds = new DataSet();
+
+        string parent = ConfigurationManager.AppSettings["Parent"];
+        string child = ConfigurationManager.AppSettings["Child"];
 
         public Form1()
         {
