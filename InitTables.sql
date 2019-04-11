@@ -46,5 +46,13 @@ VALUES
 	(N'B3', N'rh+', 500, 2),
     (N'AB4', N'rh-', 600, 3)
 
+INSERT INTO Lab01.dbo.patients
+	([name], [birth_date], [CNP], [patients_doctor])
+VALUES
+	(N'Bolnav', '25-JUN-80', 168123, 1),
+	(N'Sarac', '10-JUN-90', 168723, 1),
+	(N'Om Simplu', '1-JAN-90', 212315, 2)
+
 SELECT * FROM dbo.doctors
 SELECT * FROM dbo.requests
+SELECT * FROM dbo.patients

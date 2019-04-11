@@ -42,7 +42,7 @@ CREATE TABLE addresses(
 CREATE TABLE doctors (
 	doctor_id INT IDENTITY(1,1) PRIMARY KEY,
 	name VARCHAR(50) NOT NULL,
-	birth_date DATE,
+	birth_date VARCHAR(50),
 	CNP BIGINT UNIQUE NOT NULL,
 	--/(1-m) patients
 	--/(1-m) requests
@@ -57,27 +57,29 @@ CREATE TABLE doctors (
 	--!Removed the constraint so i can use the client app!
 );
 
+--FK relation name = patients_doctor
 CREATE TABLE patients (
-	patient_id INT NOT NULL PRIMARY KEY,
+	patient_id INT IDENTITY(1,1) PRIMARY KEY,
 	name VARCHAR(50) NOT NULL,
-	birth_date DATE,
+	birth_date VARCHAR(50),
 	CNP	BIGINT UNIQUE NOT NULL,
 	--(m-1) doctors
 	--CONSTRAINT patients_doctor FOREIGN KEY (patient_id)
 	--	REFERENCES Lab01.dbo.doctors (doctor_id)
 	--	ON DELETE NO ACTION  --CASCADE
 	--	ON UPDATE NO ACTION, --CASCADE,
-	patients_doctor INT REFERENCES doctors(doctor_id) NOT NULL,
+	doctor_id INT REFERENCES doctors(doctor_id) NOT NULL,
 	--(1-1) addresses
 	--CONSTRAINT patient_addr FOREIGN KEY (patient_id)
 	--	REFERENCES Lab01.dbo.addresses (addr_id)
 	--	ON DELETE CASCADE
 	--	ON UPDATE CASCADE
-	patient_addr INT REFERENCES addresses(addr_id) NOT NULL
+	patient_addr INT REFERENCES addresses(addr_id)
 	--CONSTRAINT patient_addr UNIQUE (patient_addr)
 	--!Removed the constraint so i can use the client app!
 );
 
+--FK relation name = requests_doctor
 CREATE TABLE requests(
 	request_id INT IDENTITY(1,1) PRIMARY KEY,
 	quantity INT NOT NULL,
@@ -88,7 +90,7 @@ CREATE TABLE requests(
 	--	REFERENCES Lab01.dbo.doctors (doctor_id)
 	--	ON DELETE CASCADE
 	--	ON UPDATE CASCADE
-	requests_doctor INT REFERENCES doctors(doctor_id) NOT NULL
+	doctor_id INT REFERENCES doctors(doctor_id) NOT NULL
 );
 
 CREATE TABLE donors(
@@ -201,5 +203,3 @@ CREATE TABLE blood_samples(
 CREATE TABLE tableVersions (
 	version_id INT NOT NULL PRIMARY KEY
 );
-
-GO
