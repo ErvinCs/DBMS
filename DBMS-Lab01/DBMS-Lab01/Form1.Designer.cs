@@ -48,6 +48,7 @@
             this.dateTimePicker = new System.Windows.Forms.DateTimePicker();
             this.cbRH = new System.Windows.Forms.ComboBox();
             this.cbGroup = new System.Windows.Forms.ComboBox();
+            this.controlPanel = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.viewDoctors)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewRequests)).BeginInit();
             this.SuspendLayout();
@@ -79,9 +80,9 @@
             this.labelRequests.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelRequests.Location = new System.Drawing.Point(484, 9);
             this.labelRequests.Name = "labelRequests";
-            this.labelRequests.Size = new System.Drawing.Size(118, 25);
+            this.labelRequests.Size = new System.Drawing.Size(211, 25);
             this.labelRequests.TabIndex = 4;
-            this.labelRequests.Text = "Requests:";
+            this.labelRequests.Text = "Requests/Patients:";
             // 
             // labelName
             // 
@@ -117,7 +118,7 @@
             // 
             this.labelQuantity.AutoSize = true;
             this.labelQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelQuantity.Location = new System.Drawing.Point(485, 340);
+            this.labelQuantity.Location = new System.Drawing.Point(13, 458);
             this.labelQuantity.Name = "labelQuantity";
             this.labelQuantity.Size = new System.Drawing.Size(72, 20);
             this.labelQuantity.TabIndex = 8;
@@ -127,7 +128,7 @@
             // 
             this.labelRH.AutoSize = true;
             this.labelRH.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelRH.Location = new System.Drawing.Point(485, 375);
+            this.labelRH.Location = new System.Drawing.Point(13, 493);
             this.labelRH.Name = "labelRH";
             this.labelRH.Size = new System.Drawing.Size(37, 20);
             this.labelRH.TabIndex = 9;
@@ -137,7 +138,7 @@
             // 
             this.labelGroup.AutoSize = true;
             this.labelGroup.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelGroup.Location = new System.Drawing.Point(485, 411);
+            this.labelGroup.Location = new System.Drawing.Point(13, 525);
             this.labelGroup.Name = "labelGroup";
             this.labelGroup.Size = new System.Drawing.Size(99, 20);
             this.labelGroup.TabIndex = 10;
@@ -162,7 +163,7 @@
             // tbQuantity
             // 
             this.tbQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbQuantity.Location = new System.Drawing.Point(610, 334);
+            this.tbQuantity.Location = new System.Drawing.Point(129, 455);
             this.tbQuantity.Name = "tbQuantity";
             this.tbQuantity.Size = new System.Drawing.Size(100, 26);
             this.tbQuantity.TabIndex = 16;
@@ -170,7 +171,7 @@
             // btnAddRequest
             // 
             this.btnAddRequest.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAddRequest.Location = new System.Drawing.Point(771, 331);
+            this.btnAddRequest.Location = new System.Drawing.Point(299, 458);
             this.btnAddRequest.Name = "btnAddRequest";
             this.btnAddRequest.Size = new System.Drawing.Size(141, 29);
             this.btnAddRequest.TabIndex = 20;
@@ -181,7 +182,7 @@
             // btnDeleteRequest
             // 
             this.btnDeleteRequest.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDeleteRequest.Location = new System.Drawing.Point(771, 366);
+            this.btnDeleteRequest.Location = new System.Drawing.Point(299, 493);
             this.btnDeleteRequest.Name = "btnDeleteRequest";
             this.btnDeleteRequest.Size = new System.Drawing.Size(141, 29);
             this.btnDeleteRequest.TabIndex = 21;
@@ -192,7 +193,7 @@
             // btnUpdateRequest
             // 
             this.btnUpdateRequest.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnUpdateRequest.Location = new System.Drawing.Point(771, 401);
+            this.btnUpdateRequest.Location = new System.Drawing.Point(300, 528);
             this.btnUpdateRequest.Name = "btnUpdateRequest";
             this.btnUpdateRequest.Size = new System.Drawing.Size(141, 29);
             this.btnUpdateRequest.TabIndex = 22;
@@ -235,7 +236,7 @@
             "A2",
             "B3",
             "AB4"});
-            this.cbRH.Location = new System.Drawing.Point(610, 371);
+            this.cbRH.Location = new System.Drawing.Point(129, 493);
             this.cbRH.Name = "cbRH";
             this.cbRH.Size = new System.Drawing.Size(121, 24);
             this.cbRH.TabIndex = 26;
@@ -248,16 +249,24 @@
             this.cbGroup.Items.AddRange(new object[] {
             "rh-",
             "rh+"});
-            this.cbGroup.Location = new System.Drawing.Point(610, 407);
+            this.cbGroup.Location = new System.Drawing.Point(129, 525);
             this.cbGroup.Name = "cbGroup";
             this.cbGroup.Size = new System.Drawing.Size(121, 24);
             this.cbGroup.TabIndex = 27;
+            // 
+            // controlPanel
+            // 
+            this.controlPanel.Location = new System.Drawing.Point(489, 337);
+            this.controlPanel.Name = "controlPanel";
+            this.controlPanel.Size = new System.Drawing.Size(423, 220);
+            this.controlPanel.TabIndex = 28;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(924, 545);
+            this.ClientSize = new System.Drawing.Size(924, 587);
+            this.Controls.Add(this.controlPanel);
             this.Controls.Add(this.cbGroup);
             this.Controls.Add(this.cbRH);
             this.Controls.Add(this.dateTimePicker);
@@ -310,6 +319,7 @@
         private System.Windows.Forms.DateTimePicker dateTimePicker;
         private System.Windows.Forms.ComboBox cbRH;
         private System.Windows.Forms.ComboBox cbGroup;
+        private System.Windows.Forms.Panel controlPanel;
     }
 }
 

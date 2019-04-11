@@ -9,13 +9,21 @@ using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Windows.Forms;
 using System.Configuration;
+using System.Diagnostics;
 
 namespace DBMS_Lab01
 {
     public partial class Form1 : Form
     {
-        private static String connectionString = @"Data Source=DESKTOP-AFL01LP;Initial Catalog=Lab01;Integrated Security=True";
-        SqlConnection connection = new SqlConnection(connectionString);
+        SqlConnection connection;
+        DataSet ds;
+        SqlDataAdapter da;
+
+        BindingSource bsChild;
+        BindingSource bsParent;
+
+        List<TextBox> textBoxes;
+        List<Label> labels;
 
         string parent = ConfigurationManager.AppSettings["Parent"];
         string child = ConfigurationManager.AppSettings["Child"];
@@ -27,20 +35,105 @@ namespace DBMS_Lab01
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            try
-            {
-                connection.Open();
-                MessageBox.Show(connection.State.ToString());
+            ConnectionStringSettings conSet = ConfigurationManager.ConnectionStrings["connectionString"];
+            string connectionString = conSet.ConnectionString;
+            connection = new SqlConnection(connectionString);
 
-            }
-            catch (Exception err)
-            {
-                MessageBox.Show("Error: " + err.Message.ToString());
-            }
-            updateViewDoctors();
-            initComboBoxes();
+            bsParent = new BindingSource();
+            bsChild = new BindingSource();
+            da = new SqlDataAdapter();
+            ds = new DataSet();
+
+            updateDataSet();
+            //updateViews();
+            //initPanel();
         }
 
+        public void updateDataSet()
+        {
+            connection.Open();
+
+            string selectCmd = ConfigurationManager.AppSettings["ParentSelectAll"];
+            da.SelectCommand = new SqlCommand(selectCmd, connection);
+            da.Fill(ds, parent);
+
+            selectCmd = ConfigurationManager.AppSettings["ChildSelectAll"];
+            da.SelectCommand = new SqlCommand(selectCmd, connection);
+            da.Fill(ds, child);
+
+            connection.Close();
+        }
+
+        public void updateViews()
+        {
+            viewDoctors.DataSource = bsParent;
+            viewRequests.DataSource = bsChild;
+            updateChildView();
+            viewDoctors.AutoResizeColumns();    //CHECK DOC
+            viewRequests.AutoGenerateColumns = true;    //CHECK DOC
+        }
+
+        public void updateChildView()
+        {
+            string idParent = ConfigurationManager.AppSettings["idParent"];
+
+            Debug.Write(ds.Tables[parent].Columns.ToString());
+            Debug.Write(ds.Tables[parent].Columns.ToString());
+            //FK Relation
+            DataRelation relation = new DataRelation("Parent_Child_FK",
+                ds.Tables[parent].Columns[idParent],
+                ds.Tables[child].Columns[idParent]);
+
+            ds.Relations.Add(relation);
+
+            bsParent.DataSource = ds;
+            bsParent.DataMember = parent;
+
+            bsChild.DataSource = bsParent;
+            bsChild.DataMember = "Parent_Child_FK";
+        }
+
+        public void initPanel()
+        {
+            labelRequests.Text = ConfigurationManager.AppSettings["ChildTable"];
+            this.textBoxes = new List<TextBox>();
+            this.labels = new List<Label>();
+
+            foreach (Control item in controlPanel.Controls.OfType<TextBox>())
+            {
+                controlPanel.Controls.Remove(item);
+            }
+
+            foreach (Control item in controlPanel.Controls.OfType<Label>())
+            {
+                controlPanel.Controls.Remove(item);
+            }
+
+            int idCounter = 0;
+            int columnCount = ds.Tables[child].Columns.Count;
+
+            for (int i = 0; i < columnCount; i++)
+            {
+                Label label = new Label();
+                label.Text = ds.Tables[child].Columns[i].ColumnName;
+
+                Point textP = new Point(idCounter * 120, 44);
+                Point labelP = new Point(idCounter * 120, 30);
+                label.Location = labelP;
+                label.AutoSize = true;
+
+                TextBox textBox = new TextBox();
+                textBox.Location = textP;
+                textBoxes.Add(textBox);
+                labels.Add(label);
+                idCounter++;
+
+                controlPanel.Controls.Add(label);
+                controlPanel.Controls.Add(textBox);
+            }
+        }
+
+        [Obsolete("DEPRECATED")]
         private void updateViewRequests(int id)
         {
             viewRequests.DataSource = null;
@@ -57,6 +150,7 @@ namespace DBMS_Lab01
             viewRequests.DataSource = ds.Tables["Requests"];
         }
 
+        [Obsolete("DEPRECATED")]
         private void updateViewDoctors()
         {
             SqlDataAdapter adapter;
@@ -73,6 +167,7 @@ namespace DBMS_Lab01
             updateViewRequests(id);
         }
 
+        [Obsolete("DEPRECATED")]
         private void initComboBoxes()
         {
             var rhs = new string[2];
@@ -119,6 +214,7 @@ namespace DBMS_Lab01
             cbGroup.BindingContext = this.BindingContext;
         }
 
+        [Obsolete("DEPRECATED - Might still keep this one tho")]
         private void viewDoctors_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             int doctorId;
@@ -129,144 +225,127 @@ namespace DBMS_Lab01
 
         private void btnAddDoctor_Click(object sender, EventArgs e)
         {
-            String name = tbName.Text;
+            connection.Open();
+            //int selectedRowIndex = viewDoctors.SelectedCells[0].RowIndex;
 
-            long CNP;
-            long.TryParse(this.tbCNP.Text, out CNP);
+            //string foreignID = viewDoctors.Rows[selectedRowIndex].Cells[0].Value.ToString();
 
-            try
-            {
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = connection;
-                cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "INSERT into Doctors ([name],[birth_date],[CNP]) VALUES (@name, @birth_date, @CNP)";
-                cmd.Parameters.AddWithValue("@name", name);
-                cmd.Parameters.AddWithValue("@birth_date", dateTimePicker.Value.Date);
-                cmd.Parameters.AddWithValue("@CNP", CNP);
-                cmd.ExecuteNonQuery();
+            string insertCmd = ConfigurationManager.AppSettings["ParentInsert"];
+            da.InsertCommand = new SqlCommand(insertCmd, connection);
 
-                updateViewDoctors();
-            }
-            catch (SqlException err)
+            int columnCount = ds.Tables[parent].Columns.Count;
+
+            for (int i = 0; i < columnCount; i++)
             {
-                MessageBox.Show("SQLException: " + err.ToString());
-            } catch (Exception err)
-            {
-                MessageBox.Show("Exception: " + err.ToString());
+                string value = "@v" + (i).ToString();
+                da.InsertCommand.Parameters.AddWithValue(value, textBoxes[i].Text);
             }
 
-            tbName.Clear();
-            tbCNP.Clear();
+            da.InsertCommand.ExecuteNonQuery();
+
+            ds.Tables[parent].Clear();
+            string selectcmd = ConfigurationManager.AppSettings["ParentSelectAll"];
+            da.SelectCommand = new SqlCommand(selectcmd, connection);
+            da.Fill(ds, parent);
+
+            connection.Close();
+
+            //tbName.Clear();
+            //tbCNP.Clear();
         }
 
         private void btnAddRequest_Click(object sender, EventArgs e)
         {
-            int quantity;
-            int.TryParse(tbQuantity.Text, out quantity);
+            connection.Open();
+            int selectedRowIndex = viewDoctors.SelectedCells[0].RowIndex;
 
-            String rh = cbRH.Text.ToString();
+            string foreignID = viewDoctors.Rows[selectedRowIndex].Cells[0].Value.ToString();
 
-            String bloodGroup = cbGroup.Text.ToString();
+            string insertCmd = ConfigurationManager.AppSettings["ChildInsert"];
+            da.InsertCommand = new SqlCommand(insertCmd, connection);
 
-            int doctorId;
-            int.TryParse(viewDoctors.CurrentRow.Cells[0].Value.ToString(), out doctorId);
+            int columnCount = ds.Tables[child].Columns.Count;
 
-            try
+            for (int i = 0; i < columnCount; i++)
             {
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = connection;
-                cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "INSERT into Requests ([blood_group],[rh],[quantity],[requests_doctor]) VALUES (@blood_group, @rh, @quantity, @requests_doctor)";
-                cmd.Parameters.AddWithValue("@blood_group", bloodGroup);
-                cmd.Parameters.AddWithValue("@rh", rh);
-                cmd.Parameters.AddWithValue("@quantity", quantity);
-                cmd.Parameters.AddWithValue("@requests_doctor", doctorId);
-                cmd.ExecuteNonQuery();
+                string value = "@v" + (i).ToString();
+                da.InsertCommand.Parameters.AddWithValue(value, textBoxes[i].Text);
 
-                updateViewRequests(doctorId);
-            }
-            catch (SqlException err)
-            {
-                MessageBox.Show(err.ToString());
-            } catch (Exception err)
-            {
-                MessageBox.Show("SQLError: " + err.ToString());
             }
 
-            tbQuantity.Clear();
+            da.InsertCommand.ExecuteNonQuery();
+
+            ds.Tables[child].Clear();
+            string selectcmd = ConfigurationManager.AppSettings["ChildSelectAll"];
+            da.SelectCommand = new SqlCommand(selectcmd, connection);
+            da.Fill(ds, child);
+
+            connection.Close();
+
+            //tbQuantity.Clear();
         }
 
         private void btnDeleteRequest_Click(object sender, EventArgs e)
         {
-            int doctorId;
-            int.TryParse(viewDoctors.CurrentRow.Cells[0].Value.ToString(), out doctorId);
-
-            try
+            if (viewRequests.SelectedCells.Count > 0)
             {
-                int requestId;
-                int.TryParse(viewRequests.CurrentRow.Cells[0].Value.ToString(), out requestId);
+                connection.Open();
+                int selectedRowIndex = viewRequests.SelectedCells[0].RowIndex;
 
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = connection;
-                cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "DELETE FROM Requests WHERE request_id = @request_id";
-                cmd.Parameters.AddWithValue("@request_id", requestId);
-                cmd.ExecuteNonQuery();
+                DataGridViewRow selectedRow = viewRequests.Rows[selectedRowIndex];
 
-                updateViewRequests(doctorId);
+                string toDeleteId = Convert.ToString(selectedRow.Cells[0].Value);
+
+                string deleteCmd = ConfigurationManager.AppSettings["ChildDelete"];
+                da.DeleteCommand = new SqlCommand(deleteCmd, connection);
+                da.DeleteCommand.Parameters.Add("v0", SqlDbType.VarChar).Value = toDeleteId;
+                da.DeleteCommand.ExecuteNonQuery();
+
+                ds.Tables[child].Clear();
+                string selectcmd = ConfigurationManager.AppSettings["ChildSelectAll"];
+                da.SelectCommand = new SqlCommand(selectcmd, connection);
+
+                da.Fill(ds, child);
+
+
+                connection.Close();
             }
-            catch (SqlException err)
-            {
-                MessageBox.Show("SQLException: " + err.ToString());
-            } catch (Exception err)
-            {
-                MessageBox.Show("Exception: " + err.ToString());
-            }
+            else
+                MessageBox.Show("No row selected!");
 
-            tbQuantity.Clear();
+            //tbQuantity.Clear();
         }
 
         private void btnUpdateRequest_Click(object sender, EventArgs e)
         {
-            SqlCommand cmd = new SqlCommand();
-            cmd.Connection = connection;
-            cmd.CommandType = CommandType.Text;
-
-            int requestId;
-            int.TryParse(viewRequests.CurrentRow.Cells[0].Value.ToString(), out requestId);
-
-            int doctorId;
-            int.TryParse(viewDoctors.CurrentRow.Cells[0].Value.ToString(), out doctorId);
-
-            String rh = cbRH.Text.ToString();   //cbRH.SelectedItem.ToString();
-
-            String bloodGroup = cbGroup.Text.ToString();    // cbGroup.SelectedValue.ToString();
-
-            String cmdString = "UPDATE Requests SET rh = @rh, blood_group = @blood_group, requests_doctor = @requests_doctor";
-
-            //If quantity empty
-            int quantity;
-            if (!tbQuantity.Text.Equals(""))
+            if (viewRequests.SelectedCells.Count > 0)
             {
-                cmdString += ", quantity = @quantity";
-                int.TryParse(tbQuantity.Text, out quantity);
-                cmd.Parameters.AddWithValue("@quantity", quantity);
+                connection.Open();
+                string updateCmd = ConfigurationManager.AppSettings["ChildUpdate"];
+                da.UpdateCommand = new SqlCommand(updateCmd, connection);
+
+                int clientId = int.Parse(viewRequests.CurrentRow.Cells[0].Value.ToString());
+
+                int columnCount = ds.Tables[child].Columns.Count;
+
+                for (int i = 0; i < columnCount; i++)
+                {
+                    string value = "@v" + (i).ToString();
+                    da.UpdateCommand.Parameters.Add(value, SqlDbType.VarChar).Value = textBoxes[i].Text;
+
+                }
+
+                da.UpdateCommand.ExecuteNonQuery();
+
+                ds.Tables[child].Clear();
+                string selectcmd = ConfigurationManager.AppSettings["ChildSelectAll"];
+                da.SelectCommand = new SqlCommand(selectcmd, connection);
+                da.Fill(ds, child);
+
+                connection.Close();
             }
 
-            cmdString += " WHERE request_id = @request_id";
-
-
-            cmd.CommandText = cmdString;
-            cmd.Parameters.AddWithValue("@requests_doctor", doctorId);
-            cmd.Parameters.AddWithValue("@request_id", requestId);
-            cmd.Parameters.AddWithValue("@rh", rh);
-            cmd.Parameters.AddWithValue("@blood_group", bloodGroup);
-
-            cmd.ExecuteNonQuery();
-
-            updateViewRequests(doctorId);
-
-            tbQuantity.Clear();
+            //tbQuantity.Clear();
         }
     }
 }
