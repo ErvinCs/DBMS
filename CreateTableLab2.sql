@@ -68,7 +68,7 @@ CREATE TABLE patients (
 	--	REFERENCES Lab01.dbo.doctors (doctor_id)
 	--	ON DELETE NO ACTION  --CASCADE
 	--	ON UPDATE NO ACTION, --CASCADE,
-	patients_doctor INT REFERENCES doctors(doctor_id) NOT NULL,
+	doctor_id INT REFERENCES doctors(doctor_id) NOT NULL,
 	--(1-1) addresses
 	--CONSTRAINT patient_addr FOREIGN KEY (patient_id)
 	--	REFERENCES Lab01.dbo.addresses (addr_id)
@@ -90,7 +90,7 @@ CREATE TABLE requests(
 	--	REFERENCES Lab01.dbo.doctors (doctor_id)
 	--	ON DELETE CASCADE
 	--	ON UPDATE CASCADE
-	requests_doctor INT REFERENCES doctors(doctor_id) NOT NULL
+	doctor_id INT REFERENCES doctors(doctor_id) NOT NULL
 );
 
 CREATE TABLE donors(
