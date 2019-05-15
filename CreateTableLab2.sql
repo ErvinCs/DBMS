@@ -1,4 +1,4 @@
-USE Lab01
+USE dbms
 GO
 BEGIN
 	IF OBJECT_ID('dbo.donors_donation_centers', 'U') IS NOT NULL
@@ -94,8 +94,8 @@ CREATE TABLE requests(
 );
 
 CREATE TABLE donors(
-	donor_id INT NOT NULL PRIMARY KEY,
-	name VARCHAR(50) NOT NULL,
+	donor_id INT IDENTITY(1,1) PRIMARY KEY,
+	name VARCHAR(100) NOT NULL,
 	birth_date DATE,
 	CNP	BIGINT UNIQUE NOT NULL,
 	--/(1-m) donations
@@ -105,13 +105,13 @@ CREATE TABLE donors(
 	--	REFERENCES Lab01.dbo.addresses (addr_id)
 	--	ON DELETE CASCADE
 	--	ON UPDATE CASCADE
-	donor_addr INT REFERENCES addresses(addr_id)
-	CONSTRAINT donor_addr UNIQUE (donor_addr)
+	--donor_addr INT REFERENCES addresses(addr_id)
+	--CONSTRAINT donor_addr UNIQUE (donor_addr)
 	--(m-m) donation_centers
 );
 
 CREATE TABLE donation_centers(
-	dc_id INT NOT NULL PRIMARY KEY,
+	dc_id INT IDENTITY(1,1) PRIMARY KEY,
 	name VARCHAR(100) NOT NULL,
 	--/(1-m) appointments
 	--(1-1) addresses
@@ -119,13 +119,14 @@ CREATE TABLE donation_centers(
 	--	REFERENCES Lab01.dbo.addresses (addr_id)
 	--	ON DELETE CASCADE
 	--	ON UPDATE CASCADE
-	dc_addr INT REFERENCES addresses(addr_id) NOT NULL
-	CONSTRAINT dc_addr UNIQUE (dc_addr)
+	--dc_addr INT REFERENCES addresses(addr_id) NOT NULL
+	--CONSTRAINT dc_addr UNIQUE (dc_addr)
 	--(m-m) donors 
 );
 
 CREATE TABLE donors_donation_centers(
-	donor_dc_id INT NOT NULL PRIMARY KEY,
+	--donor_dc_id INT IDENTITY(1,1) PRIMARY KEY,
+
 	--(1-m) donation_centers
 	--CONSTRAINT dc_donors FOREIGN KEY (donor_dc_id)
 	--	REFERENCES Lab01.dbo.donation_centers (dc_id)
@@ -137,7 +138,9 @@ CREATE TABLE donors_donation_centers(
 	--	REFERENCES Lab01.dbo.donors (donor_id)
 	--	ON DELETE NO ACTION  
 	--	ON UPDATE NO ACTION  
-	donors_dcs INT REFERENCES donors (donor_id) ON DELETE CASCADE NOT NULL 
+	donors_dcs INT REFERENCES donors (donor_id) ON DELETE CASCADE NOT NULL, 
+
+	CONSTRAINT PK_DDC PRIMARY KEY(dcs_donors, donors_dcs)
 );
 
 CREATE TABLE donations(

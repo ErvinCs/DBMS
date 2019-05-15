@@ -1,7 +1,8 @@
-USE Lab01
+USE dbms
 GO
 
-INSERT INTO Lab01.dbo.addresses
+/*
+INSERT INTO dbms.dbo.addresses
    ([addr_id],[country],[town],[addr])
 VALUES
    ( 1, N'Romania', N'Cluj-Napoca', N'Strada1'),
@@ -30,7 +31,7 @@ VALUES
    ( 24, N'Romania', N'Not In', N'Addr24'),
 ( 25, N'Romania', N'Not In', N'Addr25')
 
-INSERT INTO Lab01.dbo.doctors
+INSERT INTO dbms.dbo.doctors
    ([name],[birth_date],[CNP],[doctor_addr])
 VALUES
    (N'Ionel', '29-JUN-80', 168123, 1),
@@ -38,7 +39,7 @@ VALUES
    (N'Geanina', '29-AUG-80', 268123, 3),
    (N'Mercedesa', '10-FEB-08', 268134, 4)
 
-INSERT INTO Lab01.dbo.requests
+INSERT INTO dbms.dbo.requests
 	([blood_group],[rh],[quantity],[requests_doctor])
 VALUES
 	(N'A2', N'rh-', 300, 1),
@@ -46,7 +47,7 @@ VALUES
 	(N'B3', N'rh+', 500, 2),
     (N'AB4', N'rh-', 600, 3)
 
-INSERT INTO Lab01.dbo.patients
+INSERT INTO dbms.dbo.patients
 	([name], [birth_date], [CNP], [patients_doctor])
 VALUES
 	(N'Bolnav', '25-JUN-80', 168123, 1),
@@ -56,3 +57,33 @@ VALUES
 SELECT * FROM dbo.doctors
 SELECT * FROM dbo.requests
 SELECT * FROM dbo.patients
+*/
+
+INSERT INTO dbms.dbo.donors
+	(/*[donor_id],*/[name], [birth_date], [CNP])
+VALUES
+	(N'Dorel', '25-JUN-80', 168123),
+	(N'Bicu', '10-JUN-85', 168124),
+	(N'Smaranda', '1-JAN-90', 212315),
+	(N'Calina', '2-JAN-90', 212310)
+
+INSERT INTO dbms.dbo.donation_centers
+	(/*[dc_id],*/ [name])
+VALUES
+	(N'C Motilor'),
+	(N'C Manastur'),
+	(N'C Zorilor')
+
+INSERT INTO dbms.dbo.donors_donation_centers
+	([dcs_donors], [donors_dcs])
+VALUES
+	(1, 1),
+	(1, 2),
+	(1, 3),
+	(2, 1),
+	(2, 2),
+	(3, 3)
+
+SELECT * FROM dbms.dbo.donation_centers
+SELECT * FROM dbms.dbo.donors
+SELECT * FROM dbms.dbo.donors_donation_centers
