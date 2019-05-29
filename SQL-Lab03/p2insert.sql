@@ -8,7 +8,7 @@ GO
 
 CREATE OR ALTER PROCEDURE dbo.usp_insert_mm_roll (
 	--@don_id INT='6',
-	@don_name VARCHAR(100)='sp2 don6',
+	@don_name VARCHAR(100)='',	--'sp2 don6',
 	@don_bd DATE='02-NOV-67',
 	@don_cnp BIGINT=112124,
 	--@dc_id INT=5,

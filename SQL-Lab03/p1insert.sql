@@ -8,7 +8,7 @@ GO
 
 CREATE OR ALTER PROCEDURE dbo.usp_insert_mm (
 	--@don_id INT='5',
-	@don_name VARCHAR(100)='sp don5',
+	@don_name VARCHAR(100)='',	--'sp don5',
 	@don_bd DATE='01-NOV-67',
 	@don_cnp BIGINT=112123,
 	--@dc_id INT=4,
