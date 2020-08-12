@@ -1,3 +1,7 @@
 # DBMS
-### Lab01
-C# Windows Forms application that uses ADO.NET to interact with a database - MSSQL. <br/>
+C# Windows Forms application. Uses ADO.NET to interact with an MSSQL database (<a href="https://github.com/ErvinCs/DB">Modelled here</a>) <br/>
+**Learned:**
+* SQL Server Structure
+* Transactions
+* Concrrency Control & ACID Principles
+* Querry Optimization
