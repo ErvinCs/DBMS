@@ -1,4 +1,4 @@
-USE Lab01
+USE dbms
 GO
 BEGIN
 	IF OBJECT_ID('dbo.donors_donation_centers', 'U') IS NOT NULL
